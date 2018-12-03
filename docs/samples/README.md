@@ -37,7 +37,7 @@ Future versions will model all ATLAS entities, and likely offer better support f
 # C# Samples
 Samples cover the usual use cases for reading, writing and reading and linking telemetry data.
 According to that each sample .cs file has a Write(), Read() and ReadAndLink() methods and all of the sample files rely on the same structure. You can use them as working samples copying to your application code.
-The .cs files in the [Samples folder](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/tree/update_samples/docs/samples) have documenting and descriptive comments, but lets take a look at a simple and a more complex sample in depth.
+The .cs files in the [Samples folder](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/tree/update_samples/src/MAT.OCS.Streaming.Samples/Samples) have documenting and descriptive comments, but lets take a look at a simple and a more complex sample in depth.
 
 ## Writing Telemetry Data with a parameter and default feed name to a Kafka topic.
 
