@@ -49,7 +49,8 @@ namespace MAT.OCS.Streaming.Samples.Samples
         public void CloseSession()
         {
             if (this.session.SessionOutput.SessionState == StreamSessionState.Closed) return;
-            this.session.SessionOutput.SessionState = StreamSessionState.Truncated;
+            // should be closed not truncated
+            this.session.SessionOutput.SessionState = StreamSessionState.Closed;
             this.session.SessionOutput.SendSession();
         }
 
@@ -100,11 +101,9 @@ namespace MAT.OCS.Streaming.Samples.Samples
 
         public void Dispose()
         {
-            if (this.session.SessionOutput.SessionState != StreamSessionState.Closed)
-            {
-                this.session.SessionOutput.SessionState = StreamSessionState.Truncated;
-                this.session.SessionOutput.SendSession();
-            }
+            if (this.session.SessionOutput.SessionState == StreamSessionState.Closed) return;
+            this.session.SessionOutput.SessionState = StreamSessionState.Truncated;
+            this.session.SessionOutput.SendSession();
         }
     }
 }

@@ -7,7 +7,8 @@
 
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.2.1" />
-    <PackageReference Include="MAT.OCS.Streaming" Version="0.7.2" />
+    <PackageReference Include="MAT.OCS.Streaming" Version="0.9.3-ci-20190123-185519" />
+    <PackageReference Include="MAT.OCS.Streaming.Codecs.Protobuf" Version="0.9.3-ci-20190123-185519" />
     <PackageReference Include="MAT.OCS.Streaming.Kafka" Version="0.7.2" />
     <PackageReference Include="MAT.OCS.Streaming.Mqtt" Version="0.7.2" />
     <PackageReference Include="NLog" Version="4.5.2" />
