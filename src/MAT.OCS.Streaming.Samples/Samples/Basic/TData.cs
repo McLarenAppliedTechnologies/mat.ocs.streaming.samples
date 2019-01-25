@@ -1,15 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using MAT.OCS.Streaming.IO;
+using MAT.OCS.Streaming.IO.TelemetryData;
 using MAT.OCS.Streaming.Kafka;
 using MAT.OCS.Streaming.Model;
 using MAT.OCS.Streaming.Model.AtlasConfiguration;
+using MAT.OCS.Streaming.Model.DataFormat;
 using MAT.OCS.Streaming.Samples.CSharp;
 
-namespace MAT.OCS.Streaming.Samples.Samples
+namespace MAT.OCS.Streaming.Samples.Samples.Basic
 {
     class TData
     {
@@ -60,7 +61,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName, true)); // Create a new DataFormatClient
 
@@ -93,6 +94,77 @@ namespace MAT.OCS.Streaming.Samples.Samples
                 throw new Exception("Couldn't connect");
             pipeline.WaitUntilFirstStream(TimeSpan.FromMinutes(1), CancellationToken.None); // Wait until the first stream is ready to read.
 
+        }
+
+        public void WriteTData()
+        {
+            var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
+            const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
+            const string groupName = "dev"; // The group name
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+            var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
+            var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
+            var httpDependencyClient = new HttpDependencyClient(dependencyServiceUri, groupName); // DependencyClient stores the Data format, Atlas Configuration
+            using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
+            {
+                var atlasConfigurationId = new AtlasConfigurationClient(httpDependencyClient).PutAndIdentifyAtlasConfiguration(AtlasConfiguration); // Uniq ID created for the AtlasConfiguration
+                var dataFormat = DataFormat.DefineFeed().Parameter(ParameterId).BuildFormat(); // Create a dataformat based on the parameters, using the parameter id
+                var dataFormatId = dataFormatClient.PutAndIdentifyDataFormat(dataFormat); // Uniq ID created for the Data Format
+
+                var output = new SessionTelemetryDataOutput(outputTopic, dataFormatId, dataFormatClient);
+                output.SessionOutput.AddSessionDependency(DependencyTypes.DataFormat, dataFormatId); // Add session dependencies to the output
+                output.SessionOutput.AddSessionDependency(DependencyTypes.AtlasConfiguration, atlasConfigurationId);
+
+                output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
+                output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
+                output.SessionOutput.SessionIdentifier = "data_" + DateTime.Now; // set a custom session identifier
+                output.SessionOutput.SendSession();
+
+                var telemetryData = GenerateData(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
+
+                const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
+                var outputFeed = output.DataOutput.BindFeed(feedName); // bind your feed by its name to the Data Output
+
+                Task.WaitAll(outputFeed.EnqueueAndSendData(telemetryData)); // enqueue and send the data to the output through the outputFeed
+
+                output.SessionOutput.SessionState = StreamSessionState.Closed; // set session state to closed. In case of any unintended session close, set state to Truncated
+                output.SessionOutput.SendSession(); // send session
+            }
+        }
+        /// <summary>
+        /// Generates random TelemtryData. 
+        /// </summary>
+        /// <param name="sampleCount">The sample count that is used to set the size of each TelemetryData.Parameter values' size.</param>
+        /// <param name="sessionStart">Used to set the EpochNanos property of the TelemetryData. TelemetryData.Parameters
+        /// share the same timestamps as they aligned to the same time.</param>
+        /// <returns></returns>
+        public static TelemetryData GenerateData(int sampleCount, DateTime sessionStart)
+        {
+            var data = new TelemetryData()
+            {
+                EpochNanos = sessionStart.ToTelemetryTime(),
+                TimestampsNanos = new long[sampleCount],
+                Parameters = new TelemetryParameterData[1] // The sample AtlasConfiguration has only 1 parameter
+            };
+
+            // The sample AtlasConfiguration has only 1 parameter, so data.Parameters[0] must be initialized only.
+            data.Parameters[0] = new TelemetryParameterData()
+            {
+                AvgValues = new double[sampleCount], // The data will be stored in the AvgValues array, so this must be initialized
+                Statuses = new DataStatus[sampleCount] // Status is stored for each data, so Statuses array must be initialized
+            };
+
+            var randomRangeWalker = new RandomRangeWalker(0, 1); // Used to generated random data
+
+            for (int i = 0; i < sampleCount; i++)
+            {
+                var nextData = randomRangeWalker.GetNext();
+                data.TimestampsNanos[i] = i * Interval; // timestamps expressed in ns since the epoch, which is the start of the session
+                data.Parameters[0].AvgValues[i] = nextData;
+                data.Parameters[0].Statuses[i] = DataStatus.Sample;
+            }
+
+            return data;
         }
     }
 }

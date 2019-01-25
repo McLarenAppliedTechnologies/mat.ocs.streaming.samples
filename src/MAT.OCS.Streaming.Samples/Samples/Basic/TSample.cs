@@ -2,21 +2,17 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using MAT.OCS.Streaming.Codecs.Protobuf;
 using MAT.OCS.Streaming.IO;
-using MAT.OCS.Streaming.IO.TelemetryData;
 using MAT.OCS.Streaming.IO.TelemetrySamples;
 using MAT.OCS.Streaming.Kafka;
 using MAT.OCS.Streaming.Model;
 using MAT.OCS.Streaming.Model.AtlasConfiguration;
 using MAT.OCS.Streaming.Model.DataFormat;
-using MAT.OCS.Streaming.Samples.Adapters;
-using MAT.OCS.Streaming.Samples.CSharp;
 
-namespace MAT.OCS.Streaming.Samples.Samples
+namespace MAT.OCS.Streaming.Samples.Samples.Basic
 {
     public class TSample
     {
@@ -69,10 +65,10 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_record"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
-
+            
             var pipeline = client.StreamTopic(topicName).Into(streamId => // Stream Kafka topic into the handler method
             {
                 var input = new SessionTelemetryDataInput(streamId, dataFormatClient);
@@ -93,6 +89,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             pipeline.WaitUntilFirstStream(TimeSpan.FromMinutes(5), CancellationToken.None); // Wait until the first stream is ready to read.
             pipeline.WaitUntilIdle(TimeSpan.FromMinutes(5), CancellationToken.None); // Wait for 5 minutes of the pipeline being idle before exit.
 
+            pipeline.Dispose();
         }
 
         public void WriteTSamples()
@@ -101,7 +98,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_record"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
             var httpDependencyClient = new HttpDependencyClient(dependencyServiceUri, groupName); // DependencyClient stores the Data format, Atlas Configuration
@@ -124,7 +121,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
                 var telemetrySamples = GenerateSamples(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples data
 
                 const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
-                var outputFeed = output.SamplesOutput.BindFeed(feedName); // bind your feed by its name to the output
+                var outputFeed = output.SamplesOutput.BindFeed(feedName); // bind your feed by its name to the Samples Output
 
                 Task.WaitAll(outputFeed.SendSamples(telemetrySamples)); // send the samples to the output through the outputFeed
 
