@@ -54,6 +54,30 @@ You can optionally handle the [StreamFinished event](https://github.com/McLarenA
 
 A few important things to successfully read and consume the stream is to make sure to [wait until connected](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L92-L93) and [wait for the first stream](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L94). Optionally you can tell the pipeline to wait for a specific time [while the stream is being idle](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L95), before exiting from the process.
 
+### Write Telemetry Data
+First of all you need to create or use an [AtlasConfiguration](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L32-L57)
+You need to set specify [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L17-L26) what AppGroupId, ParameterGroupId, ParameterID you would use.
+
+Once you have your AtlasConfiguration design, you need to set [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L102-L108) for the DependencyService URI, the stream broker address, the group name and the topic name that you want to read. 
+The DependencyService is used to handle requests for AtlasConfigurations and DataFormats, you must provide an URI for this service. 
+The DataFormatClient handles the data formats through the DependencyService for the given group name.
+
+[Open the output topic](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L110) using the KafkaStreamClient and the topicName.
+
+[Retrieve the atlas configuration id](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L112) for your AtlasConfiguration. 
+[Identify the dataFormatId](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L113-L114) for your dataformat, using your parameterIds.
+
+[Create a SessionTelemetryDataOutput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L116) and configure session output [properties](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L117-L122). Once it is done, [send the session](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L123) details to the output.
+
+You will need TelemetryData to write to the output. In this example we [generate some random telemetryData](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L125) for the purpose of demonstration.
+
+[Bind you feed](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L127-L128) by its name to the output. You can use the default feedname or use a custom one.
+
+[Enqueue and send](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L130) your telemetry data.
+
+Once you sent all your data, don't forget to [set the session state to closed](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L132) and [send the session details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L133).
+
+
 ## Advances samples
 Advanced samples cover the usual use cases for reading, writing and reading and linking telemetry data in an structured and organized code.
 According to that each sample .cs file has a Write(), Read() and ReadAndLink() methods and all of the sample files rely on the same structure. You can use them as working samples copying to your application code.
