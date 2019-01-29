@@ -35,7 +35,27 @@ This pre-release version of the API demonstrates the event-based messaging appro
 Future versions will model all ATLAS entities, and likely offer better support for aggregates and predictive models. 
 
 # C# Samples
-Samples cover the usual use cases for reading, writing and reading and linking telemetry data.
+## Basic samples
+Basic samples demonstrate the simple usage of Advanced Streams, covering all the bare minimal and necessarry steps to implement Telematry Data and Telemetry Sample read and write to and from Kafka streams.
+
+### Read Telemetry Data
+First of all you need to create or use an [AtlasConfiguration](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L32-L57)
+You need to set specify [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L17-L26) what AppGroupId, ParameterGroupId, ParameterID you would use.
+
+Once you have your AtlasConfiguration design, you need to set [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L61-L66) for the DependencyService URI, the stream broker address, the group name and the topic name that you want to read. 
+The DependencyService is used to handle requests for AtlasConfigurations and DataFormats, you must provide an URI for this service. 
+The DataFormatClient handles the data formats through the DependencyService for the given group name.
+
+Create a stream pipeline using the KafkaStreamClient and the topicName and stream the messages [.Into your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L68-L69).
+
+[Create a SessionTelemetryDataInput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L70) with the actual stream id and the dataFormatClient, and [bind the data input to your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L71-L73). In this example we bind the default feed and simply [print out some details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L75-L85) about the incoming data.
+
+You can optionally handle the [StreamFinished event](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L88).
+
+A few important things to successfully read and consume the stream is to make sure to [wait until connected](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/61cedae614653f4e1526d61b09518312edc47401/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L92-L93) and [wait for the first stream](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L94). Optionally you can tell the pipeline to wait for a specific time [while the stream is being idle](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L95), before exiting from the process.
+
+## Advances samples
+Advanced samples cover the usual use cases for reading, writing and reading and linking telemetry data in an structured and organized code.
 According to that each sample .cs file has a Write(), Read() and ReadAndLink() methods and all of the sample files rely on the same structure. You can use them as working samples copying to your application code.
 The .cs files in the [Samples folder](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/tree/update_samples/src/MAT.OCS.Streaming.Samples/Samples) have documenting and descriptive comments, but lets take a look at a simple and a more complex sample in depth.
 
