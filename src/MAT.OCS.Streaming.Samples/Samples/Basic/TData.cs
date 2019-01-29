@@ -92,6 +92,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             if (!pipeline.WaitUntilConnected(TimeSpan.FromSeconds(30), CancellationToken.None)) // Wait until the connection is established
                 throw new Exception("Couldn't connect");
             pipeline.WaitUntilFirstStream(TimeSpan.FromMinutes(1), CancellationToken.None); // Wait until the first stream is ready to read.
+            pipeline.WaitUntilIdle(TimeSpan.FromMinutes(5), CancellationToken.None); // Wait for 5 minutes of the pipeline being idle before exit.
 
             pipeline.Dispose();
         }
