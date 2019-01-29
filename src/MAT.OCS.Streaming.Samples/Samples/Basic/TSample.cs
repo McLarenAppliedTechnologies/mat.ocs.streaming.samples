@@ -80,6 +80,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
                     Trace.WriteLine(data.Parameters.Count);
                 });
 
+                input.StreamFinished += (sender, e) => Trace.WriteLine("Finished"); // Handle the steam finished event
                 return input;
             });
 
