@@ -65,7 +65,6 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName, true)); // Create a new DataFormatClient
 
-            //read
             var pipeline = client.StreamTopic(topicName).Into(streamId => // Stream Kafka topic into the handler method
             {
                 var input = new SessionTelemetryDataInput(streamId, dataFormatClient);
@@ -94,6 +93,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
                 throw new Exception("Couldn't connect");
             pipeline.WaitUntilFirstStream(TimeSpan.FromMinutes(1), CancellationToken.None); // Wait until the first stream is ready to read.
 
+            pipeline.Dispose();
         }
 
         public void WriteTData()
@@ -105,6 +105,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
             var httpDependencyClient = new HttpDependencyClient(dependencyServiceUri, groupName); // DependencyClient stores the Data format, Atlas Configuration
+
             using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
             {
                 var atlasConfigurationId = new AtlasConfigurationClient(httpDependencyClient).PutAndIdentifyAtlasConfiguration(AtlasConfiguration); // Uniq ID created for the AtlasConfiguration
