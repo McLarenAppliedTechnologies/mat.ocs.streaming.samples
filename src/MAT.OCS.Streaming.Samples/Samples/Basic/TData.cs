@@ -8,7 +8,6 @@ using MAT.OCS.Streaming.Kafka;
 using MAT.OCS.Streaming.Model;
 using MAT.OCS.Streaming.Model.AtlasConfiguration;
 using MAT.OCS.Streaming.Model.DataFormat;
-using MAT.OCS.Streaming.Samples.CSharp;
 
 namespace MAT.OCS.Streaming.Samples.Samples.Basic
 {
@@ -80,7 +79,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
                         for (var j = 0; j < time.Length; j++)
                         {
                             var fromMilliseconds = TimeSpan.FromMilliseconds(time[j].NanosToMillis());
-                            Trace.WriteLine($"{fromMilliseconds:hh\\:mm\\:ss\\.fff}, { NumberToBarString.Convert(vCar[j]) }");
+                            Trace.WriteLine($"{fromMilliseconds:hh\\:mm\\:ss\\.fff}, {  new string('.', (int)(50 * vCar[j])) }");
                         }
                     }
                 };

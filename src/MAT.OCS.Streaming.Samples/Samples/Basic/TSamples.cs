@@ -14,7 +14,7 @@ using MAT.OCS.Streaming.Model.DataFormat;
 
 namespace MAT.OCS.Streaming.Samples.Samples.Basic
 {
-    public class TSample
+    public class TSamples
     {
         // The data tree structure in Atlas is built up by these values, and would look like this:
         // Chassis 

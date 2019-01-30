@@ -1,7 +1,6 @@
 ﻿using MAT.OCS.Streaming.IO.TelemetryData;
 using MAT.OCS.Streaming.IO.TelemetrySamples;
 using MAT.OCS.Streaming.Model;
-using MAT.OCS.Streaming.Samples.CSharp;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -22,7 +21,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
                 for (var j = 0; j < time.Length; j++)
                 {
                     var fromMilliseconds = TimeSpan.FromMilliseconds(time[j].NanosToMillis());
-                    Trace.WriteLine($"{fromMilliseconds:hh\\:mm\\:ss\\.fff}, { NumberToBarString.Convert(vCar[j]) }");
+                    Trace.WriteLine($"{fromMilliseconds:hh\\:mm\\:ss\\.fff}, { new string('.', (int)(50 * vCar[j])) }");
                 }
             }
         }

@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MAT.OCS.Streaming.Kafka;
-using MAT.OCS.Streaming.Mqtt;
+﻿using MAT.OCS.Streaming.Mqtt;
 
 namespace MAT.OCS.Streaming.Samples.Adapters
 {
     class MqttStreamAdapter : StreamAdapter
     {
-        private MqttStreamClient client;
+        private readonly MqttStreamClient client;
 
         public MqttStreamAdapter(MqttConnectionConfig config)
         {

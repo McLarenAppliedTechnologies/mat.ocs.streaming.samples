@@ -1,18 +1,13 @@
 ﻿using MAT.OCS.Streaming.Kafka;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace MAT.OCS.Streaming.Samples.Adapters
 {
     public class KafkaStreamAdapter : StreamAdapter
     {
-        private KafkaStreamClient client;
+        private readonly KafkaStreamClient client;
 
         public KafkaStreamAdapter(string brokerList, string consumerGroup)
         {
-            client = new KafkaStreamClient(brokerList);
-            client.ConsumerGroup = consumerGroup;
+            client = new KafkaStreamClient(brokerList) {ConsumerGroup = consumerGroup};
         }
 
         public override IOutputTopic OpenOutputTopic(string topicName)

@@ -1,6 +1,4 @@
-﻿using MAT.OCS.Streaming.Kafka;
-
-namespace MAT.OCS.Streaming.Samples.Adapters
+﻿namespace MAT.OCS.Streaming.Samples.Adapters
 {
     public abstract class StreamAdapter
     {
