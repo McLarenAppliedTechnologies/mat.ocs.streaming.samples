@@ -4,6 +4,7 @@ using MAT.OCS.Streaming.Model;
 using MAT.OCS.Streaming.Samples.CSharp;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 namespace MAT.OCS.Streaming.Samples.Samples
 {
@@ -24,6 +25,11 @@ namespace MAT.OCS.Streaming.Samples.Samples
                     Trace.WriteLine($"{fromMilliseconds:hh\\:mm\\:ss\\.fff}, { NumberToBarString.Convert(vCar[j]) }");
                 }
             }
+        }
+        public static void TraceSamples(TelemetrySamples data)
+        {
+            Trace.WriteLine(data.Parameters.First().Key);
+            Trace.WriteLine(data.Parameters.Count);
         }
 
         public static void DoubleAvgModel(TelemetryData data)

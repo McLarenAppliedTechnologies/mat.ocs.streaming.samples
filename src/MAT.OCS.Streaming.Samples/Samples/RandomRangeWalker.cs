@@ -2,10 +2,10 @@
 
 namespace MAT.OCS.Streaming.Samples.Samples
 {
-    class RandomRangeWalker
+    internal class RandomRangeWalker
     {
-        private readonly double min;
         private readonly double max;
+        private readonly double min;
         private readonly Random random;
         private double value;
 
@@ -13,7 +13,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
         {
             this.min = min;
             this.max = max;
-            this.random = new Random();
+            random = new Random();
         }
 
         public double GetNext()

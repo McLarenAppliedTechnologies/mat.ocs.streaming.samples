@@ -213,7 +213,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var stream = streamAdapter.OpenStreamTopic(topicName); // Open the topic for streaming.
             using (var reader = new Reader(dependencyUri, groupName, stream)) // Create a Reader to read from the stream
             {
-                using (var pipeline = reader.Read(GetParameterIds(), Models.TraceData)) // TelemetryDataHandler parameter can be used to handle the data read from the stream.
+                using (var pipeline = reader.ReadTSamples(GetParameterIds(), Models.TraceSamples)) // TelemetryDataHandler parameter can be used to handle the data read from the stream.
                 {
                     Write(); //Write some data to have something to read while connection is open.
                 }
@@ -238,7 +238,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
                     using (var writer = new Writer(dependencyUri, AtlasConfiguration, GetDataFormat(), groupName, outputTopic)) // Create a Writer for the output topic and pass
                     {
                         const string outputFeedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
-                        using (IStreamPipeline pipeline = reader.ReadAndLink(GetParameterIds(), Models.TraceData, writer, outputFeedName)) // TelemetryDataHandler parameter can be used to handle the data read from the stream.
+                        using (IStreamPipeline pipeline = reader.ReadAndLinkTSamples(GetParameterIds(), Models.TraceSamples, writer, outputFeedName)) // TelemetryDataHandler parameter can be used to handle the data read from the stream.
                         {
                             Thread.Sleep(5000); // NOTE: without this doesn't seem to work
                             Write(); //Write some data to have something to read while connection is open.

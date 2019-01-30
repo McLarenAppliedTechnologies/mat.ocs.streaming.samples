@@ -63,7 +63,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             const string groupName = "dev"; // The group name
             const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
-            var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName, true)); // Create a new DataFormatClient
+            var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
 
             var pipeline = client.StreamTopic(topicName).Into(streamId => // Stream Kafka topic into the handler method
             {
