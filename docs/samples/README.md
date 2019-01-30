@@ -34,6 +34,14 @@ This pre-release version of the API demonstrates the event-based messaging appro
 
 Future versions will model all ATLAS entities, and likely offer better support for aggregates and predictive models. 
 
+## Requirements
+You need to install the following Nuget packages from [MAT source](https://mat-ocs.pkgs.visualstudio.com/_packaging/MAT/nuget/v3/index.json)
+
+* MAT.OCS.Streaming
+* MAT.OCS.Streaming.Kafka
+* MAT.OCS.Streaming.Mqtt
+* MAT.OCS.Streaming.Codecs.Protobuf
+
 # C# Samples
 ## Basic samples
 Basic samples demonstrate the simple usage of Advanced Streams, covering all the bare-minimum steps to implement Telematry Data and Telemetry Sample read and write to and from Kafka streams.
