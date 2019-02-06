@@ -44,7 +44,7 @@ You need to install the following Nuget packages from [MAT source](https://mat-o
 
 # C# Samples
 ## Basic samples
-Basic samples demonstrate the simple usage of Advanced Streams, covering all the bare-minimum steps to implement Telematry Data and Telemetry Sample read and write to and from Kafka streams.
+Basic samples demonstrate the simple usage of Advanced Streams, covering all the bare-minimum steps to implement Telematry Data and Telemetry Samples read and write to and from Kafka or Mqtt streams.
 
 ### Read Telemetry Data
 First of all you need to configure the [dependencies](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L60-L66)
@@ -61,7 +61,7 @@ var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyS
 The DependencyService is used to handle requests for AtlasConfigurations and DataFormats. You must provide an URI for this service. 
 The DataFormatClient handles the data formats through the DependencyService for the given group name.
 
-If you want to connect to MQTT, create an MqttStream client instead of KafkaStreamClient:
+If you want to connect to MQTT, create a client of MqttStreamClient instead of KafkaStreamClient:
 ```cs
 var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
 ```
@@ -134,7 +134,7 @@ DataFormat is required when writing to stream, as it is used to define the struc
 
 AtlasConfigurationId is needed only if you want to display your data in Atlas10.
 
-If you want to connect to MQTT, create an MqttStream client instead of KafkaStreamClient:
+If you want to connect to MQTT, create a client of MqttStreamClient instead of KafkaStreamClient:
 ```cs
 var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
 ```
@@ -208,7 +208,7 @@ Set ProtobufCodes if the data you want to read was written to the stream using P
 The DependencyService is used to handle requests for AtlasConfigurations and DataFormats. You must provide an URI for this service. 
 The DataFormatClient handles the data formats through the DependencyService for the given group name.
 
-If you want to connect to MQTT, create an MqttStream client instead of KafkaStreamClient:
+If you want to connect to MQTT, create a client of MqttStreamClient instead of KafkaStreamClient:
 ```cs
 var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
 ```
@@ -268,7 +268,7 @@ DataFormat is required when writing to stream, as it is used to define the struc
 
 AtlasConfigurationId is needed only if you want to display your data in Atlas10.
 
-If you want to connect to MQTT, create an MqttStream client instead of KafkaStreamClient:
+If you want to connect to MQTT, create a client of MqttStreamClient instead of KafkaStreamClient:
 ```cs
 var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
 ```
