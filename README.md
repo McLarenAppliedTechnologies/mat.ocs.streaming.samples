@@ -47,7 +47,7 @@ You need to install the following Nuget packages from [MAT source](https://mat-o
 Basic samples demonstrate the simple usage of Advanced Streams, covering all the bare-minimum steps to implement Telematry Data and Telemetry Sample read and write to and from Kafka streams.
 
 ### Read Telemetry Data
-First of all you need to configure the [dependencies](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L60-L66)
+First of all you need to configure the [dependencies](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L60-L66)
 ```cs
 const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
 const string groupName = "dev"; // The group name
@@ -66,12 +66,12 @@ If you want to connect to MQTT, create an MqttStream client instead of KafkaStre
 var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
 ```
 
-Create a stream pipeline using the KafkaStreamClient and the topicName. Stream the messages [.Into your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L68)
+Create a stream pipeline using the KafkaStreamClient and the topicName. Stream the messages [.Into your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L68)
 ```cs
 var pipeline = client.StreamTopic(topicName).Into(streamId => // Stream Kafka topic into the handler method
 ```
 
-[Create a SessionTelemetryDataInput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L70) with the actual stream id and the dataFormatClient, and [bind the data input to your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L71). 
+[Create a SessionTelemetryDataInput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L70) with the actual stream id and the dataFormatClient, and [bind the data input to your handler method](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L71). 
 ```cs
 var input = new SessionTelemetryDataInput(streamId, dataFormatClient);
 input.DataInput.BindDefaultFeed(ParameterId).DataBuffered += (sender, e) => // Bind the incoming feed and take the data
@@ -79,7 +79,7 @@ input.DataInput.BindDefaultFeed(ParameterId).DataBuffered += (sender, e) => // B
 }
 ```
 
-In this example we bind the default feed and simply [print out some details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L72-L86) about the incoming data.
+In this example we bind the default feed and simply [print out some details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L72-L86) about the incoming data.
 ```cs
 {
   var data = e.Buffer.GetData();
@@ -98,12 +98,12 @@ In this example we bind the default feed and simply [print out some details](htt
 };
 ```
 
-You can optionally handle the [StreamFinished event](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L88).
+You can optionally handle the [StreamFinished event](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L88).
 ```cs
 input.StreamFinished += (sender, e) => Trace.WriteLine("Finished"); // Handle the steam finished event
 ```
 
-In order to successfully read and consume the stream, make sure to [wait until connected](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L92-L93) and [wait for the first stream](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L94). Optionally you can tell the pipeline to wait for a specific time [while the stream is being idle](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/18aff92a960dca63c0ce2030b24926b43a25f566/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L95), before exiting from the process.
+In order to successfully read and consume the stream, make sure to [wait until connected](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L92-L93) and [wait for the first stream](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L94). Optionally you can tell the pipeline to wait for a specific time [while the stream is being idle](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L95), before exiting from the process.
 ```cs
 if (!pipeline.WaitUntilConnected(TimeSpan.FromSeconds(30), CancellationToken.None)) // Wait until the connection is established
      throw new Exception("Couldn't connect");
@@ -112,28 +112,83 @@ pipeline.WaitUntilIdle(TimeSpan.FromMinutes(5), CancellationToken.None); // Wait
 ```
 
 ### Write Telemetry Data
-First of all you need to create  or use an [AtlasConfiguration](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L32-L57)
-You need to set the [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L17-L26) what AppGroupId, ParameterGroupId, ParameterID you want to use.
+First of all you need to configure the [dependencies](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/update_samples/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L102-L113)
+```cs
+const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
+const string groupName = "dev"; // The group name
+const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
-Once you have your AtlasConfiguration design, you need to set [details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/446ff3b07aa2c8e1a2df8138e74c537666803948/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L102-L108) for the DependencyService URI, the stream broker address, the group name and the topic name that you want to read. 
+var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
+var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
+var httpDependencyClient = new HttpDependencyClient(dependencyServiceUri, groupName); // DependencyClient stores the Data format, Atlas Configuration
+
+var atlasConfigurationId = new AtlasConfigurationClient(httpDependencyClient).PutAndIdentifyAtlasConfiguration(AtlasConfiguration); // Uniq ID created for the AtlasConfiguration
+var dataFormat = DataFormat.DefineFeed().Parameter(ParameterId).BuildFormat(); // Create a dataformat based on the parameters, using the parameter id
+var dataFormatId = dataFormatClient.PutAndIdentifyDataFormat(dataFormat); // Uniq ID created for the Data Format
+```
+
 The DependencyService is used to handle requests for AtlasConfigurations and DataFormats. You must provide an URI for this service. 
 The DataFormatClient handles the data formats through the DependencyService for the given group name.
+DataFormat is required when writing to stream, as it is used to define the structre of the data and dataFormatId is used to retrieve dataformat from the dataFormatClient.
 
-[Open the output topic](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L110) using the KafkaStreamClient and the topicName.
+AtlasConfigurationId is needed only if you want to display your data in Atlas10.
 
-[Retrieve the atlas configuration id](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L112) for your AtlasConfiguration. 
-[Identify the dataFormatId](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L113-L114) for your dataformat, using your parameterIds.
+If you want to connect to MQTT, create an MqttStream client instead of KafkaStreamClient:
+```cs
+var client = new MqttStreamClient(new MqttConnectionConfig(brokerList, "userName", "password"));
+```
 
-[Create a SessionTelemetryDataOutput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L116) and configure session output [properties](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L117-L122). Once it is done, [send the session](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L123) details to the output.
+[Open the output topic](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L115) using the preferred client (KafkaStreamClient or MqttStreamClient) and the topicName.
+```cs
+using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
+{
+}
+```
+
+[Create a SessionTelemetryDataOutput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L117) and configure session output [properties](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L118-L123).
+```cs
+var output = new SessionTelemetryDataOutput(outputTopic, dataFormatId, dataFormatClient);
+output.SessionOutput.AddSessionDependency(DependencyTypes.DataFormat, dataFormatId); // Add session dependencies to the output
+output.SessionOutput.AddSessionDependency(DependencyTypes.AtlasConfiguration, atlasConfigurationId);
+
+output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
+output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
+output.SessionOutput.SessionIdentifier = "data_" + DateTime.Now; // set a custom session identifier
+```
+
+You must add dataFormatId and atlasConfigurationId to session dependencies to be able to use them during the streaming session.
+
+Once it is done, [send the session](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L126) details to the output.
+```cs
+output.SessionOutput.SendSession();
+```
 
 You will need TelemetryData to write to the output. In this example we [generate some random telemetryData](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L125) for the purpose of demonstration.
+```cs
+var telemetryData = GenerateData(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
+```
 
-[Bind the feed to DataOutput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L127-L128) by its name. You can use the default feedname or use a custom one.
+[Bind the feed to DataOutput](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L128-L129) by its name. You can use the default feedname or use a custom one.
+```cs
+const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
+var outputFeed = output.DataOutput.BindFeed(feedName); // bind your feed by its name to the Data Output
+```
 
-[Enqueue and send](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L130) the telemetry data.
+[Enqueue and send](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L131) the telemetry data.
+```cs
+Task.WaitAll(outputFeed.EnqueueAndSendData(telemetryData)); // enqueue and send the data to the output through the outputFeed
+```
 
-Once you sent all your data, don't forget to [set the session state to closed](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L132) and [send the session details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/33d410b4555bf3fa7d783db18dc444e1728df6b5/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L133).
+Once you sent all your data, don't forget to [set the session state to closed](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L133) 
+```cs
+output.SessionOutput.SessionState = StreamSessionState.Closed; // set session state to closed. In case of any unintended session close, set state to Truncated
+```
 
+and [send the session details](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/5b7fcb3e763a36f753f3f320ad2484867fcd66e0/src/MAT.OCS.Streaming.Samples/Samples/Basic/TData.cs#L134).
+```cs
+output.SessionOutput.SendSession(); // send session
+```
 
 ### Read Telemetry Sample
 First of all you need to create or use an [AtlasConfiguration](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/bd8ba36cd397c0d9d371391829a7224611a051ab/src/MAT.OCS.Streaming.Samples/Samples/Basic/TSample.cs#L34-L59).
