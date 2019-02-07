@@ -195,7 +195,7 @@ Task.WaitAll(outputFeed.EnqueueAndSendData(telemetryData)); // enqueue and send 
 ### Write Telemetry Samples
 You will need **TelemetrySamples** to write to the output. In this example we [generate some random telemetrySamples](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/f9f66fa96aaa51a4ec24bf921461918b3771d929/src/MAT.OCS.Streaming.Samples/Samples/Basic/TSamples.cs#L123) for the purpose of demonstration.
 ```cs
-var telemetryData = GenerateSamples(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples
+var telemetrySamples = GenerateSamples(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples
 ```
 
 [Bind the feed to **SamplesOutput**](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/f9f66fa96aaa51a4ec24bf921461918b3771d929/src/MAT.OCS.Streaming.Samples/Samples/Basic/TSamples.cs#L125-L126) by its name. You can use the default feedname or use a custom one.
