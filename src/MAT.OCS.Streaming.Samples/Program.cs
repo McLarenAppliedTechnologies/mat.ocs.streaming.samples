@@ -1,91 +1,57 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using CommandLine;
-using MAT.OCS.Streaming.Samples.CSharp;
-using MAT.OCS.Streaming.Samples.CSharp.Config;
+using MAT.OCS.Streaming.Samples.Samples;
+using MAT.OCS.Streaming.Samples.Samples.Basic;
 using NLog;
 
 namespace MAT.OCS.Streaming.Samples
 {
     public static class Program
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        private static readonly IDictionary<Command, Action> Commands = new Dictionary<Command, Action>
-        {
-            { Command.SinCosGenerator, SinCosGenerator },
-            { Command.SinCosModel, SinCosModel },
-            { Command.AbsModel, AbsModel },
-            { Command.VCar2Generator, VCar2Generator },
-            { Command.ReadSample, ReadSample },
-            { Command.WriteSample, WriteSample },
-        };
-
         public static void Main(string[] args)
         {
-            SampleAppLoggingConfigurator.Configure();
+            // Samples show how to read and write Telemetry Data and Telemetry Samples
+            // For basic usage please look at the samples in the Samples/Basic folder
 
-            new Parser(cfg => cfg.CaseInsensitiveEnumValues = true)
-                .ParseArguments<CommandLineSwitches>(args)
-                .WithParsed(Run);
-        }
+            /* Read Telemetry Data
 
-        private static void Run(CommandLineSwitches switches)
-        {
-            Logger.Info($"Command line switches provided are '{switches}'");
+            var tData = new TData();
+            tData.ReadTData();
+            
+             */
 
-            Configuration.SelectedTransport = switches.Transport;
-            Configuration.RunningEnvironmentConfig = RunningEnvironmentConfig.For(switches.Environment);
+            /* Write Telemetry Data
 
-            Commands[switches.Command]();
-        }
+            var tData = new TData();
+            tData.WriteTData();
 
-        private static void ReadSample()
-        {
-            var readSample = new ReadSample();
-            readSample.Run();
+            */
 
-            Console.ReadKey();
-        }
+            /* Read Telemetry Samples
 
-        private static void WriteSample()
-        {
-            var writeSample = new WriteSample();
-            writeSample.Run();
+            var tSamples = new TSamples();
+            tSamples.ReadTSamples();
 
-            Console.ReadKey();
-        }
+             */
 
-        private static void VCar2Generator()
-        {
-            var cancellationTokenSource = new CancellationTokenSource();
+            /* Write Telemetry Samples
 
-            var vCar2Generator = new VCar2Generator("127.0.0.1:9092", "sessions");
-            var task = vCar2Generator.Run(cancellationTokenSource.Token);
+            var tSamples = new TSamples();
+            tSamples.WriteTSamples();
 
-            Console.ReadKey();
-            cancellationTokenSource.Cancel();
+             */
 
-            task.Wait();
-        }
+            // For advanced usage with structured code please look at the samples in the Samples folder
 
-        private static void SinCosGenerator()
-        {
-            var write = new SinCosGenerator(new List<string> {"SinCos"}, "127.0.0.1:9092");
-            write.Run();
-        }
+            /* Read/Write/Read and link TDataSingleFeedSingleParameter
 
-        private static void SinCosModel()
-        {
-            var write = new SinCosModel("localhost:9092", "SinCos", "SinPlusCos");
-            write.Run().Wait();
-        }
+            TDataSingleFeedSingleParameter.Read();
+            TDataSingleFeedSingleParameter.Write();
+            TDataSingleFeedSingleParameter.ReadAndLink();
 
-        private static void AbsModel()
-        {
-            var write = new AbsModel("localhost:9092", "SinPlusCos", "Abs");
-            write.Run().Wait();
+             */
         }
     }
 }
+ 
