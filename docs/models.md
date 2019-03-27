@@ -111,7 +111,7 @@ public IStreamInput CreateStreamInput(string streamId)
 }
 ```
 ### gTotal function
-In the callback, each bucket of data is calculated and the result is sent to output topic.
+In the callback, each bucket of data is calculated and the result is sent to the output topic.
 [gTotal ](https://github.com/McLarenAppliedTechnologies/mat.ocs.streaming.samples/blob/enh/gTotal/src/MAT.OCS.Streaming.Samples/Samples/Models/StreamModel.cs#L53-L85)
 
 ```cs
