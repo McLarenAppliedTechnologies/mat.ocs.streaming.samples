@@ -7,6 +7,8 @@ Table of Contents
 <!--ts-->
 * [Introduction - MAT.OCS.Streaming library](/README.md)
 * [C# Samples](/README.md)
+* [Model sample](/docs/models.md)
+
 <!--te-->
 
 # Introduction - MAT.OCS.Streaming Library
