@@ -14,47 +14,45 @@ namespace MAT.OCS.Streaming.Samples.Models
 {
     public class ModelSample
     {
-        private const string DependencyUrl = "http://10.228.4.9:8180/api/dependencies/";
+        private const string DependencyUrl = "http://localhost:8180/api/dependencies/";
         private const string InputTopicName = "ModelsInput";
         private const string OutputTopicName = "ModelsOutput";
-        private const string BrokerList = "10.228.4.22";
+        private const string BrokerList = "localhost";
 
         private string dataFormatId;
         private string atlasConfId;
         private HttpDependencyClient dependencyClient;
         private DataFormatClient dataFormatClient;
+        private AtlasConfigurationClient acClient;
 
         public ModelSample()
         {
-            // TODO: Replace this with dependency service REST API call.
             this.dependencyClient = new HttpDependencyClient(new Uri(DependencyUrl), "dev", false);
 
-            this.dataFormatClient = new DataFormatClient(dependencyClient); // would be a web service in production
+            this.dataFormatClient = new DataFormatClient(dependencyClient);
+            this.acClient = new AtlasConfigurationClient(dependencyClient);
         }
 
         public void Run(CancellationToken cancellationToken = default(CancellationToken))
         {
             var outputDataFormat = DataFormat.DefineFeed()
-                            .Parameters(new List<string> { "gTotal:vTag" })
+                            .Parameter("gTotal:vTag")
                             .AtFrequency(100)
                             .BuildFormat();
 
             this.dataFormatId = dataFormatClient.PutAndIdentifyDataFormat(outputDataFormat);
 
-            var acClient = new AtlasConfigurationClient(dependencyClient);
 
             var atlasConfiguration = this.CreateAtlasConfiguration();
-            this.atlasConfId = acClient.PutAndIdentifyAtlasConfiguration(atlasConfiguration);
+            this.atlasConfId = this.acClient.PutAndIdentifyAtlasConfiguration(atlasConfiguration);
 
             using (var client = new KafkaStreamClient(BrokerList))
+            using (var outputTopic = client.OpenOutputTopic(OutputTopicName))
+            using (var pipeline = client.StreamTopic(InputTopicName).Into(streamId => this.CreateStreamPipeline(streamId, outputTopic)))
             {
-                using (var outputTopic = client.OpenOutputTopic(OutputTopicName))
-                using (var pipeline = client.StreamTopic(InputTopicName).Into(streamId => this.CreateStreamPipeline(streamId, outputTopic)))
-                {
-                    cancellationToken.WaitHandle.WaitOne();
-                    pipeline.Drain();
-                    pipeline.WaitUntilStopped(new TimeSpan(0, 0, 1), default(CancellationToken));
-                }
+                cancellationToken.WaitHandle.WaitOne();
+                pipeline.Drain();
+                pipeline.WaitUntilStopped(TimeSpan.FromSeconds(1), CancellationToken.None);
             }
         }
 
@@ -77,7 +75,7 @@ namespace MAT.OCS.Streaming.Samples.Models
                             Groups = new Dictionary<string, ParameterGroup>
                             {
                                 {
-                                    "TractionCircle", new ParameterGroup
+                                    "vTag", new ParameterGroup
                                     {
                                         Parameters = new Dictionary<string, Parameter>
                                         {
@@ -93,7 +91,7 @@ namespace MAT.OCS.Streaming.Samples.Models
                                 }
                             }
                         }
-            }
+                    }
                 }
             };
         }

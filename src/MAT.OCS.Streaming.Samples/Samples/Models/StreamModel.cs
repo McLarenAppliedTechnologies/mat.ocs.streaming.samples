@@ -39,7 +39,7 @@ namespace MAT.OCS.Streaming.Samples.Models
             // automatically propagate session metadata and lifecycle
             input.LinkToOutput(output.SessionOutput, identifier => identifier + "_Models");
 
-            // we simply formward laps.
+            // we simply forward laps.
             input.LapsInput.LapStarted += (s, e) => output.LapsOutput.SendLap(e.Lap);
 
             // we bind our models to specific feed and parameters.
@@ -53,14 +53,10 @@ namespace MAT.OCS.Streaming.Samples.Models
         private void gTotalModel(object sender, TelemetryDataFeedEventArgs e)
         {
             var inputData = e.Buffer.GetData();
-            var data = new TelemetryData();
 
-            data.EpochNanos = inputData.EpochNanos;
-            data.Parameters = new TelemetryParameterData[1];
+            var data = outputFeed.MakeTelemetryData(inputData.TimestampsNanos.Length, inputData.EpochNanos);
+
             data.TimestampsNanos = inputData.TimestampsNanos;
-
-            data.Parameters = new TelemetryParameterData[1];
-            data.Parameters[0] = new TelemetryParameterData();
 
             data.Parameters[0].AvgValues = new double[inputData.TimestampsNanos.Length];
             data.Parameters[0].Statuses = new DataStatus[inputData.TimestampsNanos.Length];
