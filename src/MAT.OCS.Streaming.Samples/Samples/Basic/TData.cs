@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -120,10 +120,11 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
                 output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
                 output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
+                output.SessionOutput.SessionDurationNanos = 1000000*Interval;
                 output.SessionOutput.SessionIdentifier = "data_" + DateTime.Now; // set a custom session identifier
                 output.SessionOutput.SendSession();
 
-                var telemetryData = GenerateData(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
+                var telemetryData = GenerateData(1000000, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
 
                 const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
                 var outputFeed = output.DataOutput.BindFeed(feedName); // bind your feed by its name to the Data Output
@@ -159,12 +160,15 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             var randomRangeWalker = new RandomRangeWalker(0, 1); // Used to generated random data
 
+            var timestamp = sessionStart.ToTelemetryTime();
             for (int i = 0; i < sampleCount; i++)
             {
                 var nextData = randomRangeWalker.GetNext();
-                data.TimestampsNanos[i] = i * Interval; // timestamps expressed in ns since the epoch, which is the start of the session
+                data.TimestampsNanos[i] = timestamp; // timestamps expressed in ns since the epoch, which is the start of the session
                 data.Parameters[0].AvgValues[i] = nextData;
                 data.Parameters[0].Statuses[i] = DataStatus.Sample;
+
+                timestamp+=Interval;
             }
 
             return data;
