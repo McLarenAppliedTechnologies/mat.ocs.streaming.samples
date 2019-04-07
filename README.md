@@ -8,6 +8,7 @@ Table of Contents
 * [Introduction - MAT.OCS.Streaming library](/README.md)
 * [C# Samples](/README.md)
 * [Model sample](/docs/models.md)
+
 <!--te-->
 
 # Introduction - MAT.OCS.Streaming Library
@@ -25,7 +26,7 @@ With support for Apache Kafka, the streaming API also offers:
 * Fault-tolerant, scalable broker architecture 
 
 ## API Documentation
-See [v0.9.0 documentation](https://mclarenappliedtechnologies.github.io/mat.atlas.advancedstreams-docs/0.9.0/)
+See [v1.8 documentation](https://mclarenappliedtechnologies.github.io/mat.atlas.advancedstreams-docs/1.8/)
 
 ## Knowledgebase
 Be sure to look at our support knowledgebase on Zendesk: https://mclarenappliedtechnologies.zendesk.com/
