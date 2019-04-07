@@ -54,7 +54,6 @@ namespace MAT.OCS.Streaming.Samples
             TDataSingleFeedSingleParameter.Read();
             TDataSingleFeedSingleParameter.Write();
             TDataSingleFeedSingleParameter.ReadAndLink();
-
              */
         }
     }
