@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using MAT.OCS.Streaming.Samples.Models;
 using MAT.OCS.Streaming.Samples.Samples;
 using MAT.OCS.Streaming.Samples.Samples.Basic;
+
 using NLog;
 
 namespace MAT.OCS.Streaming.Samples
@@ -41,6 +43,9 @@ namespace MAT.OCS.Streaming.Samples
             tSamples.WriteTSamples();
 
              */
+
+             var model = new ModelSample();
+             model.Run();
 
             // For advanced usage with structured code please look at the samples in the Samples folder
 
