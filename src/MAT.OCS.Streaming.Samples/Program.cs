@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using MAT.OCS.Streaming.Samples.Models;
 using MAT.OCS.Streaming.Samples.Samples;
 using MAT.OCS.Streaming.Samples.Samples.Basic;
@@ -23,29 +24,49 @@ namespace MAT.OCS.Streaming.Samples
             
              */
 
-            /* Write Telemetry Data
+            // Write Telemetry Data
+            List<Task> tasks = new List<Task>();
+            for (var i = 0; i <= 5; i++)
+            {
+                var counter = i;
+                tasks.Add(Task.Run(() =>
+                {
+                    var tData = new TData();
+                    Console.WriteLine($"Sending TData #{counter}");
+                    tData.WriteTData(false);
+                }
+                ).ContinueWith((task) =>
+                {
+                    Console.WriteLine($"done sending TData #{counter}");
+                }));
+            }
 
-            var tData = new TData();
-            tData.WriteTData();
+            Task.WaitAll(tasks.ToArray());
+            Console.WriteLine($"Done sending TDatas");
 
-            */
+            /*   tData = new TData();
+               tData.WriteTData(true);*/
 
             /* Read Telemetry Samples
 
             var tSamples = new TSamples();
             tSamples.ReadTSamples();
-
              */
 
-            /* Write Telemetry Samples
 
+            //  Write Telemetry Samples
+         /*   Console.WriteLine("Sending TSamples");
             var tSamples = new TSamples();
-            tSamples.WriteTSamples();
+            tSamples.WriteTSamples(false);*/
 
-             */
+           /* new TSamples();
+            tSamples.WriteTSamples(true);*/
 
-             var model = new ModelSample();
-             model.Run();
+
+            /*
+            var model = new ModelSample();
+            model.Run();
+            */
 
             // For advanced usage with structured code please look at the samples in the Samples folder
 

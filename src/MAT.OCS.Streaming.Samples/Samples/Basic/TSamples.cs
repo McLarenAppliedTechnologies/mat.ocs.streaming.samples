@@ -62,7 +62,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             ProtobufCodecs.RegisterCodecs(true); // Enable Protobuff codec if the streamed data is Protobuff encoded
 
-            const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
+            const string brokerList = "10.228.5.31:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
             const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
 
@@ -94,12 +94,12 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             pipeline.Dispose();
         }
 
-        public void WriteTSamples()
+        public void WriteTSamples(bool multi)
         {
-            const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
+            const string brokerList = "10.228.5.31:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
-            var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
+            const string topicName = "TestTopic"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            var dependencyServiceUri = new Uri("http://10.228.5.33:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
             var dataFormatClient = new DataFormatClient(new HttpDependencyClient(dependencyServiceUri, groupName)); // Create a new DataFormatClient
@@ -111,24 +111,40 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
             {
+                const int sampleCount = 100;
+
                 var output = new SessionTelemetryDataOutput(outputTopic, dataFormatId, dataFormatClient);
                 output.SessionOutput.AddSessionDependency(DependencyTypes.DataFormat, dataFormatId); // Add session dependencies to the output
                 output.SessionOutput.AddSessionDependency(DependencyTypes.AtlasConfiguration, atlasConfigurationId);
 
                 output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
                 output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
-                output.SessionOutput.SessionIdentifier = "sample_" + DateTime.Now; // set a custom session identifier
+                output.SessionOutput.SessionDurationNanos = (long)TimeSpan.FromSeconds(16).TotalMilliseconds * 100 + sampleCount * Interval; // duration should be last sample time - start of session in nanoseconds
+                output.SessionOutput.SessionIdentifier = $"sample_{(multi ? "m" : "s")}_" + DateTime.Now; // set a custom session identifier
                 output.SessionOutput.SendSession(); // send session details
 
-                var telemetrySamples = GenerateSamples(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples data
+                var telemetrySamples = GenerateSamples(sampleCount, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples data
 
                 const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
                 var outputFeed = output.SamplesOutput.BindFeed(feedName); // bind your feed by its name to the Samples Output
 
-                Task.WaitAll(outputFeed.SendSamples(telemetrySamples)); // send the samples to the output through the outputFeed
-
+                Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, (DateTime)output.SessionOutput.SessionStart))); // send the samples to the output through the outputFeed
+                if (multi)
+                {
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(2)))); // send the samples to the output through the outputFeed
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(4)))); // send the samples to the output through the outputFeed
+                 //   Thread.Sleep(2000);
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(6)))); // send the samples to the output through the outputFeed
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(8)))); // send the samples to the output through the outputFeed
+                    output.SessionOutput.SendSession().Wait();
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(10)))); // send the samples to the output through the outputFeed
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(12)))); // send the samples to the output through the outputFeed
+                  //  Thread.Sleep(2000);
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(14)))); // send the samples to the output through the outputFeed
+                    Task.WaitAll(outputFeed.SendSamples(GenerateSamples(sampleCount, ((DateTime)output.SessionOutput.SessionStart).AddSeconds(16)))); // send the samples to the output through the outputFeed
+                }
                 output.SessionOutput.SessionState = StreamSessionState.Closed; // set session state to closed. In case of any unintended session close, set state to Truncated
-                output.SessionOutput.SendSession(); // send session details
+                output.SessionOutput.SendSession().Wait(); // send session details
             }
 
         }
@@ -150,11 +166,13 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             var randomRangeWalker = new RandomRangeWalker(0, 1); // Used to generated random data
 
+            long timestamp = 0;
             for (int i = 0; i < sampleCount; i++)
             {
                 var nextSample = randomRangeWalker.GetNext();
-                sample.TimestampsNanos[i] = i * Interval;
+                sample.TimestampsNanos[i] = timestamp;
                 sample.Values[i] = nextSample;
+                timestamp += Interval;
             }
 
             var data = new TelemetrySamples()

@@ -14,10 +14,10 @@ namespace MAT.OCS.Streaming.Samples.Models
 {
     public class ModelSample
     {
-        private const string DependencyUrl = "http://localhost:8180/api/dependencies/";
+        private const string DependencyUrl = "http://10.228.5.33:8180/api/dependencies/";
         private const string InputTopicName = "ModelsInput";
         private const string OutputTopicName = "ModelsOutput";
-        private const string BrokerList = "localhost";
+        private const string BrokerList = "10.228.5.31:9092";
 
         private string dataFormatId;
         private string atlasConfId;
