@@ -5,9 +5,11 @@
 Table of Contents
 =================
 <!--ts-->
-* [Introduction - MAT.OCS.Streaming library](/README.md)
-* [C# Samples](/README.md)
-* [Model sample](/docs/models.md)
+* [Introduction - MAT.OCS.Streaming library](/readme.md)
+* [C# Read/Write Samples](../CSharp/readme.md)
+* [C# Model sample](../CSharp/models.md)
+* [Python Read/Write Samples](/readme.md)
+* [Python Model sample](/models.md)
 
 <!--te-->
 
