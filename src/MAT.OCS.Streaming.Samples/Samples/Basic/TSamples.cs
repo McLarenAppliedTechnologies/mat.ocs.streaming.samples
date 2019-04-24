@@ -111,16 +111,18 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
             {
+                const int sampleCount = 1000;
                 var output = new SessionTelemetryDataOutput(outputTopic, dataFormatId, dataFormatClient);
                 output.SessionOutput.AddSessionDependency(DependencyTypes.DataFormat, dataFormatId); // Add session dependencies to the output
                 output.SessionOutput.AddSessionDependency(DependencyTypes.AtlasConfiguration, atlasConfigurationId);
 
                 output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
                 output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
+                output.SessionOutput.SessionDurationNanos = sampleCount * Interval; // duration should be time elapsed between session start time and last sample time
                 output.SessionOutput.SessionIdentifier = "sample_" + DateTime.Now; // set a custom session identifier
                 output.SessionOutput.SendSession(); // send session details
 
-                var telemetrySamples = GenerateSamples(10, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples data
+                var telemetrySamples = GenerateSamples(sampleCount, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry samples data
 
                 const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
                 var outputFeed = output.SamplesOutput.BindFeed(feedName); // bind your feed by its name to the Samples Output
