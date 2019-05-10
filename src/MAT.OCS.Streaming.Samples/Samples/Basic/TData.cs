@@ -59,7 +59,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the data_in_announce
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
@@ -101,7 +101,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the data_in_announce
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
@@ -137,7 +137,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             }
         }
         /// <summary>
-        /// Generates random TelemtryData. 
+        /// Generates random TelemetryData. 
         /// </summary>
         /// <param name="sampleCount">The sample count that is used to set the size of each TelemetryData.Parameter values' size.</param>
         /// <param name="sessionStart">Used to set the EpochNanos property of the TelemetryData. TelemetryData.Parameters

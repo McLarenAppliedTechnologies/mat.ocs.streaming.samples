@@ -184,7 +184,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_in_announce
             var streamAdapter = new KafkaStreamAdapter(brokerList, "writeConsumerGroup"); // The steam adapter used to manage streams and topics in the broker. Consumer group must be unique for each stream.
             using (var topicOutput = streamAdapter.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
             {
@@ -208,7 +208,7 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_in_announce
             var streamAdapter = new KafkaStreamAdapter(brokerList, "writeConsumerGroup"); // The steam adapter used to manage streams and topics in the broker. Consumer group must be unique for each stream.
             var stream = streamAdapter.OpenStreamTopic(topicName); // Open the topic for streaming.
             using (var reader = new Reader(dependencyUri, groupName, stream)) // Create a Reader to read from the stream
@@ -225,8 +225,8 @@ namespace MAT.OCS.Streaming.Samples.Samples
             var dependencyUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string readTopicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
-            const string linkTopicName = "sample_out"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_out_announce
+            const string readTopicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_in_announce
+            const string linkTopicName = "sample_out"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_out_announce
             var readAdapter = new KafkaStreamAdapter(brokerList, "readConsumerGroup"); // The steam adapter used to manage streams and topics in the broker. Consumer group must be unique for each stream.
             var writeAdapter = new KafkaStreamAdapter(brokerList, "writeConsumerGroup"); // The steam adapter used to manage streams and topics in the broker. Consumer group must be unique for each stream.
             var stream = readAdapter.OpenStreamTopic(readTopicName); // Open the topic for streaming.
