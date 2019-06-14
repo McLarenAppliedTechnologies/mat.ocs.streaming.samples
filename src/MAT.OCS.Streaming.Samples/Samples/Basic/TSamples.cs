@@ -64,7 +64,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_in_announce
 
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
@@ -98,7 +98,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the sample_in_announce
+            const string topicName = "sample_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the sample_in_announce
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
