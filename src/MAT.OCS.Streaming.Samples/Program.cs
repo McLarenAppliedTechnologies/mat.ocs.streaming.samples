@@ -16,36 +16,40 @@ namespace MAT.OCS.Streaming.Samples
             // Samples show how to read and write Telemetry Data and Telemetry Samples
             // For basic usage please look at the samples in the Samples/Basic folder
 
-            /* Read Telemetry Data
-
-            var tData = new TData();
-            tData.ReadTData();
-            
-             */
-
-            /* Write Telemetry Data
-
-            var tData = new TData();
-            tData.WriteTData();
-
+            /*// Read Telemetry Data
+            Console.WriteLine("Reading TData");
+            var rtData = new TData();
+            rtData.ReadTData();
+            Console.WriteLine("Reading TData finished");
             */
 
-            /* Read Telemetry Samples
+            // Write Telemetry Data
+            Console.WriteLine("Writing TData");
+            var tData = new TData();
+            tData.WriteTData();
+            Console.WriteLine("Writing TData finished");
+            
+            /*
+            // Read Telemetry Samples
+            Console.WriteLine("Reading TSamples");
+            var rtSamples = new TSamples();
+            rtSamples.ReadTSamples();
+            Console.WriteLine("Reading TSamples finished");
+            */
 
-            var tSamples = new TSamples();
-            tSamples.ReadTSamples();
+            /*// Write Telemetry Samples
+            Console.WriteLine("Writing TSamples");
+            var wtSamples = new TSamples();
+            wtSamples.WriteTSamples();
+            Console.WriteLine("Writing TSamples finished");
+            */
 
-             */
-
-            /* Write Telemetry Samples
-
-            var tSamples = new TSamples();
-            tSamples.WriteTSamples();
-
-             */
-
-             var model = new ModelSample();
-             model.Run();
+            /*// Run a model
+            Console.WriteLine("Running model");
+            var model = new ModelSample();
+            model.Run();
+            Console.WriteLine("Running model finished");
+            */
 
             // For advanced usage with structured code please look at the samples in the Samples folder
 

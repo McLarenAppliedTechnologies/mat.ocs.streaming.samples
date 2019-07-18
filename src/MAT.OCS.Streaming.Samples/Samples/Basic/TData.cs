@@ -59,7 +59,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the data_in_announce
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
@@ -101,7 +101,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
         {
             const string brokerList = "localhost:9092"; // The host and port where the Kafka broker is running
             const string groupName = "dev"; // The group name
-            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_annonce topic name must exist too. In this case the data_in_announce
+            const string topicName = "data_in"; // The existing topic's name in the Kafka broker. The *_announce topic name must exist too. In this case the data_in_announce
             var dependencyServiceUri = new Uri("http://localhost:8180/api/dependencies/"); // The URI where the dependency services are running
 
             var client = new KafkaStreamClient(brokerList); // Create a new KafkaStreamClient for connecting to Kafka broker
@@ -114,17 +114,18 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
 
             using (var outputTopic = client.OpenOutputTopic(topicName)) // Open a KafkaOutputTopic
             {
+                const int sampleCount = 10000;
                 var output = new SessionTelemetryDataOutput(outputTopic, dataFormatId, dataFormatClient);
                 output.SessionOutput.AddSessionDependency(DependencyTypes.DataFormat, dataFormatId); // Add session dependencies to the output
                 output.SessionOutput.AddSessionDependency(DependencyTypes.AtlasConfiguration, atlasConfigurationId);
 
                 output.SessionOutput.SessionState = StreamSessionState.Open; // set the sessions state to open
                 output.SessionOutput.SessionStart = DateTime.Now; // set the session start to current time
-                output.SessionOutput.SessionDurationNanos = 1000000*Interval;
+                output.SessionOutput.SessionDurationNanos = sampleCount * Interval; // duration should be time elapsed between session start time and last sample time
                 output.SessionOutput.SessionIdentifier = "data_" + DateTime.Now; // set a custom session identifier
                 output.SessionOutput.SendSession();
 
-                var telemetryData = GenerateData(1000000, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
+                var telemetryData = GenerateData(sampleCount, (DateTime)output.SessionOutput.SessionStart); // Generate some telemetry data
 
                 const string feedName = ""; // As sample DataFormat uses default feed, we will leave this empty.
                 var outputFeed = output.DataOutput.BindFeed(feedName); // bind your feed by its name to the Data Output
@@ -136,7 +137,7 @@ namespace MAT.OCS.Streaming.Samples.Samples.Basic
             }
         }
         /// <summary>
-        /// Generates random TelemtryData. 
+        /// Generates random TelemetryData. 
         /// </summary>
         /// <param name="sampleCount">The sample count that is used to set the size of each TelemetryData.Parameter values' size.</param>
         /// <param name="sessionStart">Used to set the EpochNanos property of the TelemetryData. TelemetryData.Parameters
